@@ -1,14 +1,9 @@
 const { IncomingMessage } = require("http");
 const zlib = require("zlib");
 const { NodeSDK } = require("@opentelemetry/sdk-node");
-const { ConsoleSpanExporter } = require("@opentelemetry/sdk-trace-node");
 const {
   getNodeAutoInstrumentations,
 } = require("@opentelemetry/auto-instrumentations-node");
-const {
-  PeriodicExportingMetricReader,
-  ConsoleMetricExporter,
-} = require("@opentelemetry/sdk-metrics");
 const { diag, DiagConsoleLogger, DiagLogLevel } = require("@opentelemetry/api");
 
 function stringifyChunks(responseChunks) {
@@ -40,10 +35,6 @@ function responseHook(span, res) {
 // diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 const sdk = new NodeSDK({
-  traceExporter: new ConsoleSpanExporter(),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new ConsoleMetricExporter(),
-  }),
   instrumentations: [
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-http": {
